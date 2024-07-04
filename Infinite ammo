@@ -1,0 +1,61 @@
+local aux = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Upbolt/Hydroxide/revision/ohaux.lua"))()
+
+local function modifyTriggerScriptForPlayer(player)
+    local success, result = pcall(function()
+        for _, tool in ipairs(player.Backpack:GetChildren()) do
+            if tool:FindFirstChild("TriggerScript") then
+                local scriptPath = tool.TriggerScript
+                local closureName = "Unnamed function"
+                local upvalueIndex = 2
+                local closureConstants = {
+                    [1] = "KeyCode",
+                    [2] = "Enum",
+                    [3] = "R",
+                    [4] = Enum.KeyCode.R
+                }
+
+                local closure = aux.searchClosure(scriptPath, closureName, upvalueIndex, closureConstants)
+                local value = math.huge
+
+                -- DO NOT RELY ON THIS FEATURE TO PRODUCE 100% FUNCTIONAL SCRIPTS
+                debug.setupvalue(closure, upvalueIndex, value)
+            end
+        end
+
+        for _, tool in ipairs(player.Character:GetChildren()) do
+            if tool:FindFirstChild("TriggerScript") then
+                local scriptPath = tool.TriggerScript
+                local closureName = "Unnamed function"
+                local upvalueIndex = 2
+                local closureConstants = {
+                    [1] = "KeyCode",
+                    [2] = "Enum",
+                    [3] = "R",
+                    [4] = Enum.KeyCode.R
+                }
+
+                local closure = aux.searchClosure(scriptPath, closureName, upvalueIndex, closureConstants)
+                local value = math.huge
+
+                -- DO NOT RELY ON THIS FEATURE TO PRODUCE 100% FUNCTIONAL SCRIPTS
+                debug.setupvalue(closure, upvalueIndex, value)
+            end
+        end
+    end)
+
+    if success then
+        print("Successfully modified the trigger script for player: " .. player.Name)
+    else
+        warn("Failed to modify the trigger script for player: " .. player.Name .. ". Error: " .. result)
+    end
+end
+
+local function modifyAllPlayers()
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        modifyTriggerScriptForPlayer(player)
+    end
+end
+
+modifyAllPlayers()
+
+game.Players.PlayerAdded:Connect(modifyTriggerScriptForPlayer)
